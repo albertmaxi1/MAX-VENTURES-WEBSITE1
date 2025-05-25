@@ -1,7 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css'; // Make sure src/index.css is also a plain text file (can be empty)
-import App from './App';
+import ReactDOM from 'react-dom/client'; // Correct import for React 18
+import './index.css'; // You can create an empty index.css file if you want, or remove this line
+import App from './App.js'; // Explicitly specify .js extension
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
