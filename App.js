@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-// Removed all Firebase imports and related global variables.
+import React, { useState } from 'react'; // Removed useEffect as it's not used
 
 // Function to call Gemini API for text generation
 const callGeminiTextAPI = async (prompt) => {
@@ -8,7 +7,7 @@ const callGeminiTextAPI = async (prompt) => {
     chatHistory.push({ role: "user", parts: [{ text: prompt }] });
     const payload = { contents: chatHistory };
     // Your API key is placed directly here. Keep it secure!
-    const apiKey = "AIzaSyDr8Zs5bbGFhGHHGq0o4MiUzX2KEnPb89g";
+    const apiKey = "AIzaSyDr8ZsbbGFhGHHGq0o4MiUzX2KEnPb89g";
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(apiUrl, {
@@ -38,7 +37,7 @@ const callImagenAPI = async (prompt) => {
   try {
     const payload = { instances: { prompt: prompt }, parameters: { "sampleCount": 1 } };
     // Your API key is placed directly here. Keep it secure!
-    const apiKey = "AIzaSyDr8Zs5bbGFhGHHGq0o4MiUzX2KEnPb89g";
+    const apiKey = "AIzaSyDr8ZsbbGFhGHHGq0o4MiUzX2KEnPb89g";
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
 
     const response = await fetch(apiUrl, {
@@ -64,10 +63,9 @@ const callImagenAPI = async (prompt) => {
 // Home Page Component
 const HomePage = () => {
   const [heroImage, setHeroImage] = useState("https://placehold.co/1200x600/0A1931/0A1931"); // Initial placeholder background
-  const [loadingImage, setLoadingImage] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false); // Now used in this component
 
-  // This function is still available if you wish to re-add a button to trigger image generation
-  const generateHeroImage = async () => {
+  const generateHeroImage = async () => { // Now used by the button
     setLoadingImage(true);
     const imageUrl = await callImagenAPI("Abstract digital background with glowing blue and purple lines, subtle geometric patterns, professional, high-tech, dark tones, similar to McKinsey's website backdrop.");
     setHeroImage(imageUrl);
@@ -89,7 +87,7 @@ const HomePage = () => {
           <span className="font-merriweather-bold text-white">Max</span>
           <span className="font-inter-light text-mckinsey-light-gray">&nbsp;Ventures</span>
         </h1>
-        {/* If you want to put a button to generate images again, uncomment this:
+        {/* Re-introducing the button to use generateHeroImage and loadingImage */}
         <button
             onClick={generateHeroImage}
             className="bg-blue-800 text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 flex items-center justify-center"
@@ -104,7 +102,6 @@ const HomePage = () => {
               'Generate Hero Image'
             )}
           </button>
-          */}
       </div>
     </section>
   );
@@ -120,6 +117,13 @@ const AboutPage = () => {
   const generateAboutText = async () => {
     setLoadingText(true);
     const text = await callGeminiTextAPI("Write an extremely brief 'About Us' section for a consulting business named Max Ventures, emphasizing strategic financial leadership, operational excellence, transformative growth, and lasting value. Include a mention of Albert Martinez-Arizala's leadership. Maintain a victorious American style. Do not mention specific company names from his resume.");
+    const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+    const newContact = {};
+    lines.forEach(line => {
+      if (line.toLowerCase().startsWith('email:')) newContact.email = line.substring(6).trim();
+      if (line.toLowerCase().startsWith('phone:')) newContact.phone = line.substring(6).trim();
+      if (line.toLowerCase().startsWith('address:')) newContact.address = line.substring(8).trim();
+    });
     setAboutText(text);
     setLoadingText(false);
   };
@@ -222,7 +226,7 @@ const ServicesPage = () => {
         </p>
         <button
           onClick={generateAllServiceTexts}
-          className="bg-blue-900 text-white px-6 py-3 rounded-md font-semibold shadow-md hover:bg-blue-800 transition duration-300 transform hover:scale-105 mb-12 flex items-center justify-center mx-auto"
+          className="bg-blue-900 text-white px-6 py-3 rounded-md font-semibold shadow-md hover:bg-blue-800 transition duration-300 transform hover:scale-105 flex items-center justify-center"
           disabled={loadingText}
         >
           {loadingText ? (
@@ -331,7 +335,7 @@ const ContactPage = () => {
             </p>
             <button
               onClick={generateContactInfo}
-              className="mt-6 bg-blue-900 text-white px-6 py-3 rounded-md font-semibold shadow-md hover:bg-blue-800 transition duration-300 transform hover:scale-105 flex items-center justify-center mx-auto"
+              className="mt-6 bg-blue-900 text-white px-6 py-3 rounded-md font-semibold shadow-md hover:bg-blue-800 transition duration-300 transform hover:scale-105 flex items-center justify-center"
               disabled={loadingText}
             >
               {loadingText ? (
@@ -375,17 +379,11 @@ const ContactPage = () => {
 // Main App Component
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
-  // Removed userId and isAuthReady states as Firebase is removed
-  // const [userId, setUserId] = useState(null);
-  // const [isAuthReady, setIsAuthReady] = useState(false);
-
-  // Removed Firebase initialization in useEffect
-  // useEffect(() => { /* ... */ }, []);
 
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <HomePage />; // Removed userId prop
+        return <HomePage />;
       case 'about':
         return <AboutPage />;
       case 'services':
@@ -393,14 +391,12 @@ function App() {
       case 'contact':
         return <ContactPage />;
       default:
-        return <HomePage />; // Removed userId prop
+        return <HomePage />;
     }
   };
 
   return (
     <div className="font-sans antialiased text-gray-800 bg-gray-50">
-    
-
       {/* Header */}
       <header className="header-bg-color shadow-lg py-4 px-6 md:px-12 sticky top-0 z-50">
         <nav className="container mx-auto flex items-center justify-between">
