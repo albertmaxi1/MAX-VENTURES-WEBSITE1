@@ -2,7 +2,6 @@
   "name": "max-ventures-website",
   "version": "0.1.0",
   "private": true,
-"homepage": "https://albertmaxi1.github.io/max-ventures-website/",
   "dependencies": {
     "firebase": "^9.6.0",
     "react": "^18.0.0",
@@ -14,8 +13,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+
+
   },
   "eslintConfig": {
     "extends": [
@@ -36,6 +35,6 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0"
+ 
   }
 }
